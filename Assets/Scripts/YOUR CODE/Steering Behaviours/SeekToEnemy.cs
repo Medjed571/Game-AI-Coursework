@@ -6,15 +6,15 @@ using UnityEngine;
 
 public class SeekToEnemy : SteeringBehaviour
 {
-    private Targetting targetting; //references 
+    private EnemySeekPriority target; //references what to actually seek
 
     public override Vector3 UpdateBehaviour(SteeringAgent steeringAgent)
     {
-        //gets the target position from the closest enemy.
-        Vector3 targetPosition = targetting.ClosestEnemy;
-        
-        //gets the velocity and caps it to the max current speed.
-        desiredVelocity = Vector3.Normalize(targetPosition - transform.position) * SteeringAgent.MaxCurrentSpeed;
+        target.ChosenEnemy();
+
+        Vector3 targetPosition = target.chosenEnemy; //gets the target position from the closest enemy.
+
+        desiredVelocity = Vector3.Normalize(targetPosition - transform.position) * SteeringAgent.MaxCurrentSpeed; //gets the velocity and caps it to the max current speed.
 
         //calculates the steering velocity.
         steeringVelocity = desiredVelocity - steeringAgent.CurrentVelocity;

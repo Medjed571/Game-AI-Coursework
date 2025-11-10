@@ -8,10 +8,10 @@ public class AgentCreator
 	/// </summary>
 	static public readonly Type[] AllySteeringAgentTypes = new Type[]
     {
-		typeof(AllyAgent),
-		typeof(AllyAgent),
-		typeof(AllyAgent),
-		typeof(AllyAgent),
+		typeof(AllyAgentScout),
+		typeof(AllyAgentScout),
+		typeof(AllyAgentScout),
+		typeof(AllyAgentScout),
 		typeof(AllyAgent),
 		typeof(AllyAgent),
 		typeof(AllyAgent),
