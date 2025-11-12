@@ -5,7 +5,7 @@ public class AllyAgentCaptain : SteeringAgent
 	//private Attack.AttackType attackType = Attack.AttackType.AllyGun;
 	protected override void InitialiseFromAwake()
 	{
-		gameObject.AddComponent<SeekToMouse>();
+		gameObject.AddComponent<Wander>();
 	}
 
 	protected override void CooperativeArbitration()
