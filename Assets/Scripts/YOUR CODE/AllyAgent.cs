@@ -4,6 +4,8 @@ public class AllyAgent : SteeringAgent
 {
 	private Attack.AttackType attackType = Attack.AttackType.AllyGun;
 
+	public SteeringAgent nearestEnemy;
+
 	protected override void InitialiseFromAwake()
 	{
 		gameObject.AddComponent<SeekToMouse>();
@@ -11,6 +13,8 @@ public class AllyAgent : SteeringAgent
 
 	protected override void CooperativeArbitration()
 	{
+		nearestEnemy = GetNearestAgent(transform.position, GameData.Instance.enemies);
+
 		base.CooperativeArbitration();
 
 		if (Input.GetKeyDown(KeyCode.Alpha1))
