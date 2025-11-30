@@ -9,6 +9,10 @@ public class AllyAgent : SteeringAgent
 	protected override void InitialiseFromAwake()
 	{
 		gameObject.AddComponent<SeekToMouse>();
+		gameObject.AddComponent<Alignment>();
+		gameObject.AddComponent<Separation>();
+		gameObject.AddComponent<Cohesion>();
+		gameObject.AddComponent<Pursue>();
 	}
 
 	protected override void CooperativeArbitration()

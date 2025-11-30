@@ -23,13 +23,13 @@ public class ObstacleAvoidance : SteeringBehaviour
 		steeringVelocity = desiredVelocity - steeringAgent.CurrentVelocity;
 		return steeringVelocity;
 	}
-	float distance(Vector3 mapNode, Vector3 detectionPoint)
+	float Distance(Vector3 mapNode, Vector3 detectionPoint)
 	{
 		return Mathf.Sqrt((mapNode.x - detectionPoint.x) * (mapNode.x - detectionPoint.x) + (mapNode.y - detectionPoint.y) * (mapNode.y - detectionPoint.y));
 	}
 
-	bool lineIntersectsNode(Vector3 pointA, Vector3 pointB, Vector3 mapNode)
+	bool LineIntersectsNode(Vector3 pointA, Vector3 pointB, Vector3 mapNode)
     {
-		return distance(mapNode, distanceAhead) <= 0.5f || distance(mapNode, distanceAhead2) <= 0.5f;
+		return Distance(mapNode, distanceAhead) <= 0.5f || Distance(mapNode, distanceAhead2) <= 0.5f;
     }
 }

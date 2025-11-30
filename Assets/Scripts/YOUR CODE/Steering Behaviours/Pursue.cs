@@ -7,13 +7,13 @@ public class Pursue : SteeringBehaviour
 
     public override Vector3 UpdateBehaviour(SteeringAgent steeringAgent)
     {
-		var target = SteeringAgent.GetNearestAgent(transform.position, GameData.Instance.enemies);
-		int agentNode = map.MapIndex((int)transform.position.x, (int)transform.position.y);
-		int targetNode = map.MapIndex((int)target.transform.position.x, (int)target.transform.position.y);
+		//var target = SteeringAgent.GetNearestAgent(transform.position, GameData.Instance.enemies);
+		//int agentNode = map.MapIndex((int)transform.position.x, (int)transform.position.y);
+		//int targetNode = map.MapIndex((int)target.transform.position.x, (int)target.transform.position.y);
 
-		pathfinding.AStarPathfind(agentNode, targetNode);
-
-		var nearestEnemy = ;
+		//pathfinding.AStarPathfind(agentNode, targetNode);
+		
+		var nearestEnemy = SteeringAgent.GetNearestAgent(transform.position, GameData.Instance.enemies); ;
 
 		Vector3 targetPosition = nearestEnemy.transform.position + nearestEnemy.CurrentVelocity;
 		targetPosition.z = 0.0f;
@@ -23,6 +23,7 @@ public class Pursue : SteeringBehaviour
 
 		// Calculate steering velocity
 		steeringVelocity = desiredVelocity - steeringAgent.CurrentVelocity;
+		Debug.Log(steeringVelocity);
 		return steeringVelocity;
 	}
 }

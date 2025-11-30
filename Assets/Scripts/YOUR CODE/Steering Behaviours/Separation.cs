@@ -19,7 +19,7 @@ public class Separation : SteeringBehaviour
                 {
                     var pushForce = transform.position - a.transform.position;
 
-                    totalForce = totalForce + (pushForce / neighbourDistance);
+                    totalForce += (pushForce / neighbourDistance);
                     count++;
                 }
             }
@@ -34,7 +34,7 @@ public class Separation : SteeringBehaviour
         Debug.Log(count);
         Debug.Log(GameData.Instance.allies.Count);
 
-        steeringVelocity = steeringVelocity / count;
+        steeringVelocity /= count;
 
         count = 0;
 

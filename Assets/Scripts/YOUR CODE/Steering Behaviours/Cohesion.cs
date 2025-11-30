@@ -17,7 +17,7 @@ public class Cohesion : SteeringBehaviour
 				var distance = Vector3.SqrMagnitude(a.transform.position);
 				if (distance < maxCohesion)
                 {
-					centreOfMass = centreOfMass + a.transform.position;
+					centreOfMass += a.transform.position;
 					count++;
                 }
             }
@@ -29,7 +29,7 @@ public class Cohesion : SteeringBehaviour
 			return steeringVelocity;
 		}
 
-		centreOfMass = centreOfMass / count;
+		centreOfMass /= count;
 		steeringVelocity = centreOfMass;
 
 		return steeringVelocity;
