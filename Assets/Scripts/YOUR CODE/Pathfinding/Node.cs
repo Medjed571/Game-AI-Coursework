@@ -18,14 +18,10 @@ public class Node : IComparable<Node>
 
     public int CompareTo(Node othernode)//utilised to help with sorting and creating a priority queue.
     {
-        if (f < othernode.f)
-        {
-            return -1;
-        }
-        else if (f > othernode.f)
-        {
-            return 1;
-        }
+        if (f < othernode.f) 
+            { return -1; }
+        else if (f > othernode.f) 
+            { return 1; }
         return 0;
     }
 

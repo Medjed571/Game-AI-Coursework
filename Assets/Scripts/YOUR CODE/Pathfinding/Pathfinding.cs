@@ -18,7 +18,7 @@ public class Pathfinding : PathfindingBase
         AStarPathfind(startNode, endNode);
     }
 
-    private List<Node> AStarPathfind(Node startNode, Node endNode)
+    public List<Node> AStarPathfind(Node startNode, Node endNode)
     {
         if (startNode == endNode)
         {

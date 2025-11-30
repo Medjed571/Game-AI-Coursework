@@ -11,7 +11,7 @@ public class ObstacleAvoidance : SteeringBehaviour
 		var nearestEnemy = SteeringAgent.GetNearestAgent(transform.position, GameData.Instance.enemies);
 		distanceAhead = transform.position + Vector3.Normalize(steeringAgent.CurrentVelocity) * detectionRadius;
 		distanceAhead2 = transform.position + Vector3.Normalize(steeringAgent.CurrentVelocity) * detectionRadius * 0.5f;
-		var avoidanceForce = distanceAhead - 
+		//var avoidanceForce = distanceAhead - 
 
 		Vector3 targetPosition = nearestEnemy.transform.position + nearestEnemy.CurrentVelocity;
 		targetPosition.z = 0.0f;

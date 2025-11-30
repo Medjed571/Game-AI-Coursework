@@ -22,6 +22,9 @@ public class PathfindingBase : MonoBehaviour
     protected void Awake()
     {
         movementDiagonalMinusXY = movementDiagonalCost - (movementXCost + movementYCost);
+        
+        var gameData = GameData.Instance;
+        map = gameData.Map;
 
         CreateNodes();
         CreateNodesConnections();
@@ -51,7 +54,7 @@ public class PathfindingBase : MonoBehaviour
             {
                 int nodeIndex = nodeX + (nodesWidth * nodeY); //create index of each node
                 Node node = nodes[nodeIndex];
-                if (map.IsNavigatable(nodeIndex) == false) //if the node is not on a tree tile
+                if (map.IsNavigatable(nodeIndex) == true) //if the node is not on a tree tile
                 {
                     node.neighbours = new Node[0]; //store which nodes are connected to one another
                     node.neighbourCosts = new int[0]; //same as before but in int form
@@ -90,7 +93,7 @@ public class PathfindingBase : MonoBehaviour
 
                     for (int neighbourX = nodeX - 1; neighbourX <= nodeX + 1; ++neighbourX)
                     {
-                        if (neighbourX < 0 || neighbourX >= nodesWidth || (neighbourX == nodeX && neighbourY == nodeY) || map.IsNavigatable(nodeIndex) == true) //if the neighbour is out of bounds or already accounted for or a tree tile
+                        if (neighbourX < 0 || neighbourX >= nodesWidth || (neighbourX == nodeX && neighbourY == nodeY) || map.IsNavigatable(nodeIndex) == false) //if the neighbour is out of bounds or already accounted for or a tree tile
                         {
                             continue; //skip over it
                         }
