@@ -11,6 +11,7 @@ public class AllyAgentScout : SteeringAgent
 	SteeringBehaviour sbSeparation;
 	SteeringBehaviour sbCohesion;
 	SteeringBehaviour sbPursue;
+	SteeringBehaviour sbEvade;
 
 	SteeringAgent closestEnemy;
 
@@ -25,11 +26,11 @@ public class AllyAgentScout : SteeringAgent
 		sbSeparation = gameObject.AddComponent<Separation>();
 		//sbCohesion = gameObject.AddComponent<Cohesion>();
 		sbPursue = gameObject.AddComponent<Pursue>();
-		//sbEvade = gameObject.AddComponent<Evade>();
+		sbEvade = gameObject.AddComponent<Evade>();
 
 		sbSeparation.enabled = true; 
 		sbPursue.enabled = false;
-		//sbEvade.enabled = false;
+		sbEvade.enabled = false;
 	}
 
     protected override void CooperativeArbitration()
@@ -51,11 +52,11 @@ public class AllyAgentScout : SteeringAgent
 			//if enemy is visible
 			if (Health < 0.25f) //frail agents, will always flee if health is below threshhold
 			{
-				//sbEvade.enabled = true;
+				sbEvade.enabled = true;
 			}
 			else
 			{
-				attackType = Attack.AttackType.AllyGun;
+				AttackWith(attackType);
 			}
 		}
 		else
