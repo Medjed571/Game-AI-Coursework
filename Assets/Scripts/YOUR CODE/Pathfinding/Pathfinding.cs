@@ -4,18 +4,29 @@ using UnityEngine;
 
 public class Pathfinding : PathfindingBase
 {
-    public void ExecuteAlgorithm(int startNodeX, int startNodeY, int endNodeX, int endNodeY)
+    public int startNodeX;
+    public int startNodeY;
+    public int endNodeX;
+    public int endNodeY;
+
+    public List<Node> ExecuteAlgorithm(Vector3 target)
     {
         foreach (var node in nodes)
         {
             node.Reset(); //resets the data from previous runs of the algorithm
         }
 
+        startNodeX = (int)gameObject.transform.position.x;
+        startNodeY = (int)gameObject.transform.position.y;
+
+        endNodeX = (int)target.x;
+        endNodeY = (int)target.y;
+
         //translates coordinates into nodes
         Node startNode = nodes[startNodeX + (startNodeY * nodesWidth)];
         Node endNode = nodes[endNodeX + (endNodeY * nodesWidth)];
 
-        AStarPathfind(startNode, endNode);
+        return AStarPathfind(startNode, endNode);
     }
 
     public List<Node> AStarPathfind(Node startNode, Node endNode)
@@ -83,5 +94,10 @@ public class Pathfinding : PathfindingBase
         int distanceX = (targetX - currentX) * movementXCost;
         int distanceY = (targetY - currentY) * movementYCost; 
         return (int)Mathf.Sqrt((float)((distanceX * distanceX) + (distanceY * distanceY))); //returns the square root of the distance rounded down
+    }
+
+    private void Update()
+    {
+        
     }
 }

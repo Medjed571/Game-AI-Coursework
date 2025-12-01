@@ -3,7 +3,7 @@ using UnityEngine;
 public class Cohesion : SteeringBehaviour
 {
 	int count = 1; //neighbours count
-	float maxCohesion = 5f;
+	float maxCohesion = 5f; //range where agents will start to group up
 
 	public override Vector3 UpdateBehaviour(SteeringAgent steeringAgent)
 	{
@@ -12,7 +12,7 @@ public class Cohesion : SteeringBehaviour
 		for(var i = 0; i < GameData.Instance.allies.Count; i++)
         {
 			var a = GameData.Instance.allies[i];
-			if (a != this)
+			if (a != gameObject)
             {
 				var distance = Vector3.SqrMagnitude(a.transform.position);
 				if (distance < maxCohesion)
@@ -22,6 +22,9 @@ public class Cohesion : SteeringBehaviour
                 }
             }
         }
+
+		desiredVelocity = Vector3.Normalize(centreOfMass - transform.position) * SteeringAgent.MaxCurrentSpeed;
+		steeringVelocity = desiredVelocity - steeringAgent.CurrentVelocity;
 
 		if (count == 1)
         {

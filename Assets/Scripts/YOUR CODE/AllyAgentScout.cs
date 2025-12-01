@@ -12,6 +12,7 @@ public class AllyAgentScout : SteeringAgent
 	SteeringBehaviour sbCohesion;
 	SteeringBehaviour sbPursue;
 	SteeringBehaviour sbEvade;
+	SteeringBehaviour sbPathFollow;
 
 	SteeringAgent closestEnemy;
 
@@ -22,13 +23,13 @@ public class AllyAgentScout : SteeringAgent
 
 	protected override void InitialiseFromAwake()
 	{
-		//sbAlignment = gameObject.AddComponent<Alignment>();
+		sbAlignment = gameObject.AddComponent<Alignment>();
 		sbSeparation = gameObject.AddComponent<Separation>();
-		//sbCohesion = gameObject.AddComponent<Cohesion>();
+		sbCohesion = gameObject.AddComponent<Cohesion>();
 		sbPursue = gameObject.AddComponent<Pursue>();
 		sbEvade = gameObject.AddComponent<Evade>();
+		sbPathFollow = gameObject.AddComponent<PathFollow>();
 
-		sbSeparation.enabled = true; 
 		sbPursue.enabled = false;
 		sbEvade.enabled = false;
 	}

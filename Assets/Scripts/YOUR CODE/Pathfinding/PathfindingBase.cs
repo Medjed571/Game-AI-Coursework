@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System;
 
 public class PathfindingBase : MonoBehaviour
 {
@@ -19,12 +18,15 @@ public class PathfindingBase : MonoBehaviour
 
     protected Map map;                          //used to refer to each tile on the map.
 
+    protected byte[] mapData;
+
     protected void Awake()
     {
         movementDiagonalMinusXY = movementDiagonalCost - (movementXCost + movementYCost);
         
         var gameData = GameData.Instance;
         map = gameData.Map;
+        mapData = map.GetMapData();
 
         CreateNodes();
         CreateNodesConnections();
@@ -54,7 +56,7 @@ public class PathfindingBase : MonoBehaviour
             {
                 int nodeIndex = nodeX + (nodesWidth * nodeY); //create index of each node
                 Node node = nodes[nodeIndex];
-                if (map.IsNavigatable(nodeIndex) == true) //if the node is not on a tree tile
+                if (mapData[nodeIndex] > 2) //if the node is not on a tree tile
                 {
                     node.neighbours = new Node[0]; //store which nodes are connected to one another
                     node.neighbourCosts = new int[0]; //same as before but in int form
@@ -71,7 +73,7 @@ public class PathfindingBase : MonoBehaviour
 
                     for (int neighbourX = nodeX - 1; neighbourX <= nodeX + 1; ++neighbourX) //for each neighbouring X node
                     {
-                        if (neighbourX < 0 || neighbourX >= nodesWidth || (neighbourX == nodeX && neighbourY == nodeY) || map.IsNavigatable(nodeIndex) == true) //if the neighbour is out of bounds or already accounted for or a tree tile
+                        if (neighbourX < 0 || neighbourX >= nodesWidth || (neighbourX == nodeX && neighbourY == nodeY) || mapData[neighbourX + (neighbourY * nodesWidth)] > 0) //if the neighbour is out of bounds or already accounted for or a tree tile
                         {
                             continue; //skip over it
                         }
@@ -91,15 +93,16 @@ public class PathfindingBase : MonoBehaviour
                         continue; //skip over it
                     }
 
-                    for (int neighbourX = nodeX - 1; neighbourX <= nodeX + 1; ++neighbourX)
+                    for (int neighbourX = nodeX - 1; neighbourX <= nodeX + 1; ++neighbourX) //for each neighbouring X node
                     {
-                        if (neighbourX < 0 || neighbourX >= nodesWidth || (neighbourX == nodeX && neighbourY == nodeY) || map.IsNavigatable(nodeIndex) == false) //if the neighbour is out of bounds or already accounted for or a tree tile
+                        if (neighbourX < 0 || neighbourX >= nodesWidth || (neighbourX == nodeX && neighbourY == nodeY) || mapData[neighbourX + (neighbourY * nodesWidth)] > 0) //if the neighbour is out of bounds or already accounted for or a tree tile
                         {
                             continue; //skip over it
                         }
 
                         node.neighbours[connectedNodesIndex] = nodes[neighbourX + (neighbourY * nodesWidth)]; //stores node connections
                         node.neighbourCosts[connectedNodesIndex] = CalculateInitialCost(nodeX, nodeY, neighbourX, neighbourY); //stores how much it costs for one node to connect to another node
+                        ++connectedNodesIndex;
                     }
                 }
             }
@@ -134,8 +137,7 @@ public class PathfindingBase : MonoBehaviour
                 endNode = endNode.parent;
             }
 
-            // Reverse the path so the start node is at index 0
-            foundPath.Reverse();
+            foundPath.Reverse(); //reverse the path so the start node is at index 0
         }
         return foundPath;
     }

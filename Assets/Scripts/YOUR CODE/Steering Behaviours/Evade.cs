@@ -14,7 +14,6 @@ public class Evade : SteeringBehaviour
 
 		// Calculate steering velocity
 		steeringVelocity = desiredVelocity - steeringAgent.CurrentVelocity;
-		Debug.Log(steeringVelocity);
 		return steeringVelocity;
 	}
 }
