@@ -11,10 +11,9 @@ public class Alignment : SteeringBehaviour
         for (int i = 0; i < GameData.Instance.allies.Count; i++) //for each friendly agent in the scene
         {
             var a = GameData.Instance.allies[i]; //each individual ally agent
-            if (a != gameObject)
+            if (a != gameObject) //if the ally agent is not *this* ally agent
             {
-                float distance = Vector3.Distance(transform.position, a.transform.position); //determine the distance between them
-                if (distance < neighbourDistance)// && a.CurrentVelocity.magnitude > 0) //if a neighbour is currently close to the agent AND is moving
+                if ((a.transform.position).magnitude < neighbourDistance)//if a neighbour is currently close to the agent
                 {
                     sumTotal += Vector3.Normalize(a.CurrentVelocity);
                     count++;
@@ -31,9 +30,8 @@ public class Alignment : SteeringBehaviour
         sumTotal /= count;
 
         Vector3 targetPosition = sumTotal;
-
-        desiredVelocity = targetPosition * SteeringAgent.MaxCurrentSpeed;
-        targetPosition.z = 0.0f;
+        
+        desiredVelocity = Vector3.Normalize(targetPosition - transform.position) * SteeringAgent.MaxCurrentSpeed;
 
         steeringVelocity = desiredVelocity - steeringAgent.CurrentVelocity;
 

@@ -56,7 +56,7 @@ public class PathfindingBase : MonoBehaviour
             {
                 int nodeIndex = nodeX + (nodesWidth * nodeY); //create index of each node
                 Node node = nodes[nodeIndex];
-                if (mapData[nodeIndex] > 2) //if the node is not on a tree tile
+                if (mapData[nodeIndex] < 2) //if the node is on a tree tile
                 {
                     node.neighbours = new Node[0]; //store which nodes are connected to one another
                     node.neighbourCosts = new int[0]; //same as before but in int form
@@ -111,9 +111,12 @@ public class PathfindingBase : MonoBehaviour
 
     protected int CalculateInitialCost(int firstNodeX, int firstNodeY, int secondNodeX, int secondNodeY)
     {
-        int xCost = Mathf.Abs(secondNodeX - firstNodeX);
-        int yCost = Mathf.Abs(secondNodeY - firstNodeY);
-        if((xCost + yCost) < 2)
+        int xCost = Mathf.Abs(secondNodeX - firstNodeX); //returns positive X value
+        int yCost = Mathf.Abs(secondNodeY - firstNodeY); //returns positive Y value
+
+        Debug.Log(xCost + ", " + yCost);
+
+        if ((xCost + yCost) < 2)
         {
             if (xCost > 0)
             {

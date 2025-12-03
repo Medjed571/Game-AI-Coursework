@@ -14,8 +14,7 @@ public class Cohesion : SteeringBehaviour
 			var a = GameData.Instance.allies[i];
 			if (a != gameObject)
             {
-				var distance = Vector3.SqrMagnitude(a.transform.position);
-				if (distance < maxCohesion)
+				if ((a.transform.position - transform.position).magnitude < maxCohesion) //if in line of sight
                 {
 					centreOfMass += a.transform.position;
 					count++;
