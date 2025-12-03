@@ -73,7 +73,7 @@ public class PathfindingBase : MonoBehaviour
 
                     for (int neighbourX = nodeX - 1; neighbourX <= nodeX + 1; ++neighbourX) //for each neighbouring X node
                     {
-                        if (neighbourX < 0 || neighbourX >= nodesWidth || (neighbourX == nodeX && neighbourY == nodeY) || mapData[neighbourX + (neighbourY * nodesWidth)] > 0) //if the neighbour is out of bounds or already accounted for or a tree tile
+                        if (neighbourX < 0 || neighbourX >= nodesWidth || (neighbourX == nodeX && neighbourY == nodeY) || mapData[neighbourX + (neighbourY * nodesWidth)] > 2) //if the neighbour is out of bounds or already accounted for or a tree tile
                         {
                             continue; //skip over it
                         }
@@ -95,7 +95,7 @@ public class PathfindingBase : MonoBehaviour
 
                     for (int neighbourX = nodeX - 1; neighbourX <= nodeX + 1; ++neighbourX) //for each neighbouring X node
                     {
-                        if (neighbourX < 0 || neighbourX >= nodesWidth || (neighbourX == nodeX && neighbourY == nodeY) || mapData[neighbourX + (neighbourY * nodesWidth)] > 0) //if the neighbour is out of bounds or already accounted for or a tree tile
+                        if (neighbourX < 0 || neighbourX >= nodesWidth || (neighbourX == nodeX && neighbourY == nodeY) || mapData[neighbourX + (neighbourY * nodesWidth)] > 2) //if the neighbour is out of bounds or already accounted for or a tree tile
                         {
                             continue; //skip over it
                         }
@@ -117,11 +117,11 @@ public class PathfindingBase : MonoBehaviour
         {
             if (xCost > 0)
             {
-                return movementXCost;
+                return movementXCost; //if the terrain is grass
             }
-            return movementYCost;
+            return movementYCost; //if the terrain is grass
         }
-        return movementDiagonalCost;
+        return movementDiagonalCost; //if the terrain is grass
     }
 
     protected List<Node> GetFoundPath(Node endNode)
