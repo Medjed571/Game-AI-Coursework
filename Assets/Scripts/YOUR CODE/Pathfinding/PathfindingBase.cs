@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public class PathfindingBase : MonoBehaviour
 {
-    protected const int nodesWidth = 100;       //width of the map in nodes
-    protected const int nodesHeight = 100;      //height of the map in nodes
+    protected const int nodesWidth = 100;       //width of the map
+    protected const int nodesHeight = 100;      //height of the map
 
     protected int movementXCost = 10;           //movement cost along the X axis
     protected int movementYCost = 10;           //movement cost along the Y axis
@@ -18,7 +18,7 @@ public class PathfindingBase : MonoBehaviour
 
     protected Map map;                          //used to refer to each tile on the map.
 
-    protected byte[] mapData;
+    protected byte[] mapData;                   //used to refer to the map data.
 
     protected void Awake()
     {
@@ -56,7 +56,7 @@ public class PathfindingBase : MonoBehaviour
             {
                 int nodeIndex = nodeX + (nodesWidth * nodeY); //create index of each node
                 Node node = nodes[nodeIndex];
-                if (mapData[nodeIndex] < 2) //if the node is on a tree tile
+                if (mapData[nodeIndex] > 2) //if the node is on a tree tile
                 {
                     node.neighbours = new Node[0]; //store which nodes are connected to one another
                     node.neighbourCosts = new int[0]; //same as before but in int form
@@ -113,8 +113,6 @@ public class PathfindingBase : MonoBehaviour
     {
         int xCost = Mathf.Abs(secondNodeX - firstNodeX); //returns positive X value
         int yCost = Mathf.Abs(secondNodeY - firstNodeY); //returns positive Y value
-
-        Debug.Log(xCost + ", " + yCost);
 
         if ((xCost + yCost) < 2)
         {

@@ -6,10 +6,9 @@ public class AllyAgentScout : SteeringAgent
 	SteeringBehaviour sbAlignment;
 	SteeringBehaviour sbSeparation;
 	SteeringBehaviour sbCohesion;
-	SteeringBehaviour sbPursue;
 	SteeringBehaviour sbEvade;
 	SteeringBehaviour sbPathFollow;
-	SteeringBehaviour sbWander;
+	//SteeringBehaviour sbWander;
 
 	SteeringAgent closestEnemy;
 
@@ -21,15 +20,15 @@ public class AllyAgentScout : SteeringAgent
 
 	protected override void InitialiseFromAwake()
 	{
-		//sbAlignment = gameObject.AddComponent<Alignment>();
-		//sbSeparation = gameObject.AddComponent<Separation>();
-		//sbCohesion = gameObject.AddComponent<Cohesion>();
-		//sbPursue = gameObject.AddComponent<Pursue>();
-		sbEvade = gameObject.AddComponent<Evade>();
+		sbAlignment = gameObject.AddComponent<Alignment>();
+		sbSeparation = gameObject.AddComponent<Separation>();
+		sbCohesion = gameObject.AddComponent<Cohesion>();
+		//sbEvade = gameObject.AddComponent<Evade>();
 		sbPathFollow = gameObject.AddComponent<PathFollow>();
-		sbWander = gameObject.AddComponent<Wander>();
+		//sbWander = gameObject.AddComponent<Wander>();
 
-		sbEvade.enabled = false;
+		//sbWander.enabled = false;
+		//sbEvade.enabled = false;
 	}
 
     protected override void CooperativeArbitration()
@@ -45,37 +44,34 @@ public class AllyAgentScout : SteeringAgent
 			if (Random.value <= 0.0001f)
 			{
 				Debug.Log("Passed Battleshock");
-				sbEvade.enabled = false; //no longer evading fights
-				isBattleshocked = false; //no longer battleshocked
+				//sbEvade.enabled = false; //no longer evading fights
+				//isBattleshocked = false; //no longer battleshocked
 			}
 			//sbEvade.enabled = true; //flee
 		}
 
 		///Aggression
-		if (TimeToNextAttack <= 0 && closestEnemy != null) //if enemy is close enough to fire at and an enemy exists
+		if (TimeToNextAttack <= 0 && closestEnemy != null && distanceToEnemy < 15f) //if enemy is close enough to fire at and an enemy exists
         {
-			if (distanceToEnemy < 15f) //if the enemy is in shooting range
-			{
-				sbWander.enabled = false;
-				AttackWith(Attack.AttackType.AllyGun);
-			}
+			AttackWith(Attack.AttackType.AllyGun);
         }
 
-		///Roaming
-		if (closestEnemy = null)
-        {
-			//sbWander.enabled = true;
-        }
-
-        SteeringVelocity = Vector3.zero;
+		///Flocking (Weighted Blending)
+		Vector3 alignmentVect = sbAlignment.transform.position;
+		Vector3 cohesionVect = sbCohesion.transform.position;
+		Vector3 separationVect = sbSeparation.transform.position;
+		float flockingX = (alignmentVect.x * 0.25f) + (cohesionVect.x * 0.5f) + (separationVect.x * 0.25f);
+		float flockingY = (alignmentVect.y * 0.25f) + (cohesionVect.y * 0.5f) + (separationVect.x * 0.25f);
+		Vector3 flockingVect = new Vector3(flockingX, flockingY, 0f);
+		//Debug.Log(flockingVect);
+		SteeringVelocity = Vector3.zero;
 
 		GetComponents<SteeringBehaviour>(steeringBehvaiours);
 		foreach (SteeringBehaviour currentBehaviour in steeringBehvaiours) //for each steering behaviour
 		{
 			if (currentBehaviour.enabled) //take the behaviours enabled
 			{
-				SteeringVelocity += currentBehaviour.UpdateBehaviour(this); //add each velocity and divide by the amount of behaviours active.
-				Debug.Log(SteeringVelocity);
+				SteeringVelocity += flockingVect.normalized; //add each velocity
 			}
 		}
 	}

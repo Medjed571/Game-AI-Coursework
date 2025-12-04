@@ -31,5 +31,7 @@ public class Node : IComparable<Node>
         f = 0;
         g = 0;
         h = 0;
+        onOpenList = false;
+        onClosedList = false;
     }
 }

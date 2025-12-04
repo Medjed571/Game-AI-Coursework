@@ -11,16 +11,16 @@ public class Pathfinding : PathfindingBase
 
     public List<Node> ExecuteAlgorithm(Vector3 target)
     {
+        startNodeX = (int)transform.position.x;
+        startNodeY = (int)transform.position.y;
+
+        endNodeX = (int)target.x;
+        endNodeY = (int)target.y;
+
         foreach (var node in nodes)
         {
             node.Reset(); //resets the data from previous runs of the algorithm
         }
-
-        startNodeX = (int)gameObject.transform.position.x;
-        startNodeY = (int)gameObject.transform.position.y;
-
-        endNodeX = (int)target.x;
-        endNodeY = (int)target.y;
 
         //translates coordinates into nodes
         Node startNode = nodes[startNodeX + (startNodeY * nodesWidth)];
@@ -34,12 +34,13 @@ public class Pathfinding : PathfindingBase
         if (startNode == endNode)
         {
             startNode.onClosedList = true; //add the starting node onto the closed list
-            return new List<Node>() { startNode }; 
+            return new List<Node>() { startNode };
         }
 
         List<Node> openList = new List<Node>(nodes.Length); //create a new list that can store all nodes created.
 
         openList.Add(startNode);
+
         Node currentNode;
 
         while (openList.Count > 0) //while openlist is not empty
@@ -68,7 +69,7 @@ public class Pathfinding : PathfindingBase
                 }
 
                 int gCost = currentNode.g + currentNode.neighbourCosts[connectedNodesIndex]; //calculated goal cost
-                int hCost = EuclideanDistanceHeuristic(currentNeighbour.x, currentNeighbour.y, endNode.x, endNode.y); //calculated heuristic
+                int hCost = ChebyshevDistanceHeuristic(currentNeighbour.x, currentNeighbour.y, endNode.x, endNode.y); //calculated heuristic
                 int fCost = gCost + hCost; //calculated final cost
 
                 if (fCost <= currentNeighbour.f || !currentNeighbour.onOpenList) //if the newly found final cost is lower than the previous lowest or if this is the first time checking the node
@@ -89,11 +90,11 @@ public class Pathfinding : PathfindingBase
         return GetFoundPath(null);
     }
 
-    private int EuclideanDistanceHeuristic(int currentX, int currentY, int targetX, int targetY)
+    private int ChebyshevDistanceHeuristic(int currentX, int currentY, int targetX, int targetY)
     {
-        int distanceX = (targetX - currentX) * movementXCost;
-        int distanceY = (targetY - currentY) * movementYCost; 
-        return (int)Mathf.Sqrt((float)((distanceX * distanceX) + (distanceY * distanceY))); //returns the square root of the distance rounded down
+        int distanceX = Math.Abs(targetX - currentX);
+        int distanceY = Math.Abs(targetY - currentY);
+        return (distanceX * movementXCost) + (distanceY * movementYCost) + (movementDiagonalMinusXY * Math.Min(distanceX, distanceY));
     }
 
     private void Update()

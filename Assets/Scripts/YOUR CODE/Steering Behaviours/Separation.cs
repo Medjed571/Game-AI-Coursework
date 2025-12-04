@@ -2,41 +2,39 @@ using UnityEngine;
 
 public class Separation : SteeringBehaviour
 {
-    private float neighbourDistance = 2f; //line of sight for neighbour detection.
-    private float separationDistance = 3f;
+    private int neighbourDistance = 2; //line of sight for neighbour detection.
     private int count = 0; //amount of neighbouring agents.
-    private Vector3 totalForce; //force to move away from neighbouring agents 
+    private Vector3 totalForce = Vector3.zero; //force to move away from neighbouring agents 
 
     public override Vector3 UpdateBehaviour(SteeringAgent steeringAgent)
     {
+        count = 0;
+        totalForce = Vector3.zero;
+
         for (int i = 0; i < GameData.Instance.allies.Count; i++) //for each friendly agent in the scene
         {
             var a = GameData.Instance.allies[i]; //each individual ally agent
-            if (a != gameObject) //if the agent isnt *this* agent
-            {
-                if ((transform.position - a.transform.position).magnitude < neighbourDistance && (transform.position - a.transform.position).magnitude > 0) //if the agent is in the cone of vision
-                {
-                    var pushForce = transform.position - a.transform.position;
+            Vector3 pushForce = transform.position - a.transform.position;
+            float distance = pushForce.magnitude;
 
-                    totalForce += (pushForce / neighbourDistance) * separationDistance;
-                    count++;
-                }
+            if (distance > 0 && distance < neighbourDistance) //if the agent is in the cone of vision
+            {
+                pushForce.Normalize();
+                pushForce /= distance;
+                totalForce += pushForce;
+                count++;
             }
+
         }
 
-        desiredVelocity = Vector3.Normalize(transform.position - totalForce) * SteeringAgent.MaxCurrentSpeed;
-        steeringVelocity = desiredVelocity - steeringAgent.CurrentVelocity;
-
-        if (count == 0) //if there are no neighbors nearby
+        if (count > 0) //if there are neighbours
         {
-            steeringVelocity = Vector3.zero;
+            Vector3 avgCoord = totalForce / count;
+            desiredVelocity = Vector3.Normalize(avgCoord - transform.position) * SteeringAgent.MaxCurrentSpeed;
+            steeringVelocity = desiredVelocity - steeringAgent.CurrentVelocity;
+
             return steeringVelocity;
         }
-
-        steeringVelocity /= count;
-
-        count = 0;
-
-        return steeringVelocity;
+        return Vector3.zero;
     }
 }

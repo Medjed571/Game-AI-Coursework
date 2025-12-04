@@ -22,24 +22,23 @@ public class PathFollow : SteeringBehaviour
 		if (targetNodeList.Count <= 0) //if there are no enemies left in the scene
         {
 			return steeringVelocity;
-        }
-
-		Vector3 targetPosition = new Vector3(targetNodeList[pathListNumber].x, targetNodeList[pathListNumber].y, 0f);
-		if((transform.position - targetPosition).magnitude < 0.5f) //if the agent is close to the closest node
-        {
-			pathListNumber++;
-			if(pathListNumber == targetNodeList.Count) //move up the list
-            {
-				pathListNumber = targetNodeList.Count - 1; //account for lists being 1-X
-			}
 		}
 
-        if (target.Health <= 0)//|| (target.transform.position - transform.position).magnitude < 1f)//if the current enemy has died or if the agent is close enough to the current target.
+		Vector3 targetPosition = new Vector3(targetNodeList[pathListNumber].x, targetNodeList[pathListNumber].y, 0f);
+		if((targetPosition - transform.position).magnitude < 0.5f) //if the agent is close to the closest node
         {
-			target = null;
-            pathListNumber = 0;
-            targetNodeList = GetNodeList();//get a new enemy to follow
-        }
+			pathListNumber++;
+			if(pathListNumber == targetNodeList.Count) //if the agent is at the target
+            {
+				pathListNumber = 0;
+
+				if (target.Health <= 0)
+				{
+					Debug.Log("Old target dead, seeking new target.");
+					targetNodeList = GetNodeList(); //when close enough to the target. search for a new target.
+				}
+			}
+		}
 
         // Get the desired velocity for seek and limit to maxSpeed
         desiredVelocity = Vector3.Normalize(targetPosition - transform.position) * SteeringAgent.MaxCurrentSpeed;
@@ -50,12 +49,12 @@ public class PathFollow : SteeringBehaviour
 	}
 
 	private List<Node> GetNodeList()
-    {
-		target = SteeringAgent.GetNearestAgent(transform.position, GameData.Instance.enemies);
+	{
+		target = SteeringAgent.GetNearestAgent(transform.position, GameData.Instance.enemies); //finds the nearest target
 
-		Vector3 targetCoord = target.transform.position;
+		Vector3 targetCoord = target.transform.position; //find the target position
 
-		List<Node> path = pathfinding.ExecuteAlgorithm(targetCoord);
+		List<Node> path = pathfinding.ExecuteAlgorithm(targetCoord); //find a path towards it
 
 		return path;
     }

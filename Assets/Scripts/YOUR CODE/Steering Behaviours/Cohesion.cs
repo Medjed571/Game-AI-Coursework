@@ -2,38 +2,36 @@ using UnityEngine;
 
 public class Cohesion : SteeringBehaviour
 {
-	int count = 1; //neighbours count
-	float maxCohesion = 5f; //range where agents will start to group up
+	private int neighbourDistance = 4; //line of sight for neighbour detection.
+	private int count = 0; //amount of neighbouring agents.
+	private Vector3 totalPositions = Vector3.zero;
 
 	public override Vector3 UpdateBehaviour(SteeringAgent steeringAgent)
 	{
-		var centreOfMass = transform.position; //agent position
+		count = 0;
+		totalPositions = Vector3.zero;
 
 		for(var i = 0; i < GameData.Instance.allies.Count; i++)
         {
-			var a = GameData.Instance.allies[i];
-			if (a != gameObject)
+			var a = GameData.Instance.allies[i]; //each individual ally agent
+			Vector3 pullForce = transform.position - a.transform.position;
+			float distance = pullForce.magnitude;
+
+			if (distance > 0 && distance < neighbourDistance) //if in line of sight
             {
-				if ((a.transform.position - transform.position).magnitude < maxCohesion) //if in line of sight
-                {
-					centreOfMass += a.transform.position;
-					count++;
-                }
+				count++;
+				totalPositions += a.CurrentVelocity.normalized;
             }
         }
 
-		desiredVelocity = Vector3.Normalize(centreOfMass - transform.position) * SteeringAgent.MaxCurrentSpeed;
-		steeringVelocity = desiredVelocity - steeringAgent.CurrentVelocity;
+		if (count > 0) //if there are neighbours
+		{
+			Vector3 avgPos = totalPositions / count;
+			desiredVelocity = Vector3.Normalize(avgPos - transform.position) * SteeringAgent.MaxCurrentSpeed;
+			steeringVelocity = desiredVelocity - steeringAgent.CurrentVelocity;
 
-		if (count == 1)
-        {
-			steeringVelocity = Vector3.zero;
 			return steeringVelocity;
 		}
-
-		centreOfMass /= count;
-		steeringVelocity = centreOfMass;
-
-		return steeringVelocity;
+		return Vector3.zero;
 	}
 }
