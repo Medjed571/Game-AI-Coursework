@@ -10,7 +10,9 @@ public class PathFollow : SteeringBehaviour
 	private List<Node> targetNodeList;
 	private int pathListNumber;
 
-    protected override void Start()
+	private float weight = 1.25f;
+
+	protected override void Start()
     {
         base.Start();
 		pathfinding = gameObject.AddComponent<Pathfinding>();
@@ -19,7 +21,7 @@ public class PathFollow : SteeringBehaviour
 
 	public override Vector3 UpdateBehaviour(SteeringAgent steeringAgent)
 	{
-		if (targetNodeList.Count <= 0) //if there are no enemies left in the scene
+		if (target == null) //if there are no enemies left in the scene
         {
 			return steeringVelocity;
 		}
@@ -34,7 +36,6 @@ public class PathFollow : SteeringBehaviour
 
 				if (target.Health <= 0)
 				{
-					Debug.Log("Old target dead, seeking new target.");
 					targetNodeList = GetNodeList(); //when close enough to the target. search for a new target.
 				}
 			}
@@ -45,17 +46,19 @@ public class PathFollow : SteeringBehaviour
 
 		// Calculate steering velocity
 		steeringVelocity = desiredVelocity - steeringAgent.CurrentVelocity;
-		return steeringVelocity;
+		return steeringVelocity * weight;
 	}
 
 	private List<Node> GetNodeList()
 	{
 		target = SteeringAgent.GetNearestAgent(transform.position, GameData.Instance.enemies); //finds the nearest target
 
-		Vector3 targetCoord = target.transform.position; //find the target position
-
-		List<Node> path = pathfinding.ExecuteAlgorithm(targetCoord); //find a path towards it
-
-		return path;
+		if (target != null)
+		{
+			Vector3 targetCoord = target.transform.position; //find the target position
+			List<Node> path = pathfinding.ExecuteAlgorithm(targetCoord); //find a path towards it
+			return path;
+		}
+		return null;
     }
 }

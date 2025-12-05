@@ -6,6 +6,8 @@ public class Cohesion : SteeringBehaviour
 	private int count = 0; //amount of neighbouring agents.
 	private Vector3 totalPositions = Vector3.zero;
 
+	private float weight = 0.5f;
+
 	public override Vector3 UpdateBehaviour(SteeringAgent steeringAgent)
 	{
 		count = 0;
@@ -30,7 +32,7 @@ public class Cohesion : SteeringBehaviour
 			desiredVelocity = Vector3.Normalize(avgPos - transform.position) * SteeringAgent.MaxCurrentSpeed;
 			steeringVelocity = desiredVelocity - steeringAgent.CurrentVelocity;
 
-			return steeringVelocity;
+			return steeringVelocity * weight;
 		}
 		return Vector3.zero;
 	}

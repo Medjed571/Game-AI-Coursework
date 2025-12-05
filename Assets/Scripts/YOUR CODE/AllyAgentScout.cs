@@ -8,11 +8,12 @@ public class AllyAgentScout : SteeringAgent
 	SteeringBehaviour sbCohesion;
 	SteeringBehaviour sbEvade;
 	SteeringBehaviour sbPathFollow;
-	//SteeringBehaviour sbWander;
+	SteeringBehaviour sbWander;
 
 	SteeringAgent closestEnemy;
 
 	float distanceToEnemy;
+	float sightRadius = 20f;
 	private bool isBattleshocked = true; //Couldnt think of a better name. Has a chance to toggle false when the agent is low health. When off, evade behaviour is switched off.
 
 	/// stores all the steering behaviours
@@ -22,7 +23,7 @@ public class AllyAgentScout : SteeringAgent
 	{
 		sbAlignment = gameObject.AddComponent<Alignment>();
 		sbSeparation = gameObject.AddComponent<Separation>();
-		sbCohesion = gameObject.AddComponent<Cohesion>();
+		//sbCohesion = gameObject.AddComponent<Cohesion>();
 		//sbEvade = gameObject.AddComponent<Evade>();
 		sbPathFollow = gameObject.AddComponent<PathFollow>();
 		//sbWander = gameObject.AddComponent<Wander>();
@@ -36,7 +37,10 @@ public class AllyAgentScout : SteeringAgent
         base.CooperativeArbitration();
 
 		closestEnemy = GetNearestAgent(transform.position, GameData.Instance.enemies);
-		distanceToEnemy = (closestEnemy.transform.position - transform.position).magnitude;
+		if (closestEnemy != null) //if closestEnemy returns a position
+			distanceToEnemy = (closestEnemy.transform.position - transform.position).magnitude;
+		else //if closestEnemy does not return a position
+			distanceToEnemy = sightRadius + 1; //set the distance to enemy *just* out of sight.
 
 		///Health and Self Preservation
 		if (Health < 0.25f && isBattleshocked == true) //if at 1/4 health and the agent hasnt 
@@ -56,14 +60,6 @@ public class AllyAgentScout : SteeringAgent
 			AttackWith(Attack.AttackType.AllyGun);
         }
 
-		///Flocking (Weighted Blending)
-		Vector3 alignmentVect = sbAlignment.transform.position;
-		Vector3 cohesionVect = sbCohesion.transform.position;
-		Vector3 separationVect = sbSeparation.transform.position;
-		float flockingX = (alignmentVect.x * 0.25f) + (cohesionVect.x * 0.5f) + (separationVect.x * 0.25f);
-		float flockingY = (alignmentVect.y * 0.25f) + (cohesionVect.y * 0.5f) + (separationVect.x * 0.25f);
-		Vector3 flockingVect = new Vector3(flockingX, flockingY, 0f);
-		//Debug.Log(flockingVect);
 		SteeringVelocity = Vector3.zero;
 
 		GetComponents<SteeringBehaviour>(steeringBehvaiours);
@@ -71,7 +67,7 @@ public class AllyAgentScout : SteeringAgent
 		{
 			if (currentBehaviour.enabled) //take the behaviours enabled
 			{
-				SteeringVelocity += flockingVect.normalized; //add each velocity
+				SteeringVelocity += currentBehaviour.UpdateBehaviour(this); //add each velocity
 			}
 		}
 	}

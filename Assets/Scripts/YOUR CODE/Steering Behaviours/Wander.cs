@@ -12,9 +12,15 @@ public class Wander : SteeringBehaviour
 
 	private Vector3 previousTargetPosition;
 
+	private float weight = 0.25f;
+
 	protected override void Start()
 	{
 		base.Start();
+
+		transform.up = RandomPointOnUnitCircleCircumference();
+
+		previousTargetPosition = transform.up * (circleDistance + circleRadius);
 	}
 
 	public override Vector3 UpdateBehaviour(SteeringAgent steeringAgent)
@@ -32,7 +38,7 @@ public class Wander : SteeringBehaviour
 		desiredVelocity = Vector3.Normalize(targetPosition - transform.position) * SteeringAgent.MaxCurrentSpeed;
 
 		steeringVelocity = desiredVelocity - steeringAgent.CurrentVelocity;
-		return steeringVelocity;
+		return steeringVelocity * weight;
 	}
 
 	protected static Vector3 RandomPointOnUnitCircleCircumference()

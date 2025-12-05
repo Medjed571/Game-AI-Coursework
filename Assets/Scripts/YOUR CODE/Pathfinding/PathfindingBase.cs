@@ -11,8 +11,8 @@ public class PathfindingBase : MonoBehaviour
     protected int movementDiagonalCost = 14;    //movement cost when moving diagonally
     protected int movementDiagonalMinusXY;      
 
-    protected int mudCost = 5;                  //if moving through mud, add variable to the movement cost.
-    protected int waterCost = 8;                //if moving through water, add variable to the movement cost.
+    protected int mudCost = 1;                  //if moving through mud, add variable to the movement cost.
+    protected int waterCost = 2;                //if moving through water, add variable to the movement cost.
 
     protected Node[] nodes;                     //holds all nodes
 
@@ -114,15 +114,44 @@ public class PathfindingBase : MonoBehaviour
         int xCost = Mathf.Abs(secondNodeX - firstNodeX); //returns positive X value
         int yCost = Mathf.Abs(secondNodeY - firstNodeY); //returns positive Y value
 
+        //if the second node is on water
+        if (map.GetTerrainAt(secondNodeX, secondNodeY) == Map.Terrain.Water)
+        {
+            if ((xCost + yCost) < 2)
+            {
+                if (xCost > 0)
+                {
+                    return movementXCost + waterCost;
+                }
+                return movementYCost + waterCost;
+            }
+            return movementDiagonalCost + waterCost;
+        }
+
+        //if the second node is on mud
+        if (map.GetTerrainAt(secondNodeX, secondNodeY) == Map.Terrain.Mud)
+        {
+            if ((xCost + yCost) < 2)
+            {
+                if (xCost > 0)
+                {
+                    return movementXCost + mudCost;
+                }
+                return movementYCost + mudCost;
+            }
+            return movementDiagonalCost + mudCost;
+        }
+
+        //if the second node is on grass
         if ((xCost + yCost) < 2)
         {
             if (xCost > 0)
             {
-                return movementXCost; //if the terrain is grass
+                return movementXCost;
             }
-            return movementYCost; //if the terrain is grass
+            return movementYCost;
         }
-        return movementDiagonalCost; //if the terrain is grass
+        return movementDiagonalCost;
     }
 
     protected List<Node> GetFoundPath(Node endNode)
