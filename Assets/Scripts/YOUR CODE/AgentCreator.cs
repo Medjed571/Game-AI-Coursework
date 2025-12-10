@@ -19,9 +19,9 @@ public class AgentCreator
 		typeof(AllyAgentScout),
 		typeof(AllyAgentScout),
 		typeof(AllyAgentScout),
-		typeof(AllyAgentScout),
-		typeof(AllyAgentScout),
-		typeof(AllyAgentScout),
-		typeof(AllyAgentScout)
+		typeof(AllyAgentGrenadier),
+		typeof(AllyAgentGrenadier),
+		typeof(AllyAgentGrenadier),
+		typeof(AllyAgentGrenadier)
 	};
 }
