@@ -73,7 +73,10 @@ public class PathfindingBase : MonoBehaviour
 
                     for (int neighbourX = nodeX - 1; neighbourX <= nodeX + 1; ++neighbourX) //for each neighbouring X node
                     {
-                        if (neighbourX < 0 || neighbourX >= nodesWidth || (neighbourX == nodeX && neighbourY == nodeY) || mapData[neighbourX + (neighbourY * nodesWidth)] > 2) //if the neighbour is out of bounds or already accounted for or a tree tile
+                        if (neighbourX < 0 || neighbourX >= nodesWidth || 
+                            (neighbourX == nodeX && neighbourY == nodeY) || 
+                            mapData[neighbourX + (neighbourY * nodesWidth)] > 2) 
+                            //if the neighbour is out of bounds or already accounted for or a tree tile
                         {
                             continue; //skip over it
                         }

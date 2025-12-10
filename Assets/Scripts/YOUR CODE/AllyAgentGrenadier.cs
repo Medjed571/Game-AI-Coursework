@@ -66,10 +66,8 @@ public class AllyAgentGrenadier : SteeringAgent
 		///Health and Self Preservation
 		if (Health < 0.25f && isBattleshocked == true && Random.value <= 0.01f) //if at 1/4 health & hasnt recovered from battleshock & they passed a check
 		{
-			Debug.Log("Battleshocked");
-			if (Random.value <= 0.001f) //rare chance to overcome fear behaviour
+			if (Random.value <= 0.01f) //rare chance to overcome fear behaviour
 			{
-				Debug.Log("Overcame Battleshock");
 				sbEvade.enabled = false; //no longer evading fights
 				sbWander.enabled = false; //no longer aimlessly wandering
 

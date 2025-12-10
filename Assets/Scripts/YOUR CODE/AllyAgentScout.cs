@@ -12,9 +12,9 @@ public class AllyAgentScout : SteeringAgent
 
 	private SteeringAgent closestEnemy;
 
-	private float distanceToEnemy; //the distance between the agent and closest enemy
-	private float sightRadius = 20f; //the line of sight that the agent can see and shoot from
-	private bool isBattleshocked = true; //Couldnt think of a better name. Has a chance to toggle false when the agent is low health. When off, evade behaviour is switched off. based on the warhammer 40k battleshock mechanic.
+	private float distanceToEnemy; //used to determine if agent is close enough to an enemy to shoot
+	private float sightRadius = 20f; //the radius line of sight that the agent can see and shoot from
+	private bool isBattleshocked = true; //toggle that will flip false on a rare chance when the agent is low health. when false, the agent will act like it is at full health 
 
 	private bool keyBehavioursActive = true; //some behaviours that will only switch off in specific conditions (simplifies decision tree)
 
@@ -38,7 +38,7 @@ public class AllyAgentScout : SteeringAgent
     {
         base.CooperativeArbitration();
 
-		if (keyBehavioursActive == true)
+		if (keyBehavioursActive == true) //behaviours determining normal agent behaviour
         {
 			sbAlignment.enabled = true;
 			sbSeparation.enabled = true;
@@ -64,12 +64,10 @@ public class AllyAgentScout : SteeringAgent
 		}
 
 		///Health and Self Preservation
-		if (Health < 0.25f && isBattleshocked == true && Random.value <= 0.01f) //if at 1/4 health & hasnt recovered from battleshock & they passed a check
+		if (Health < 0.25f && isBattleshocked == true && Random.value <= 0.01f)
 		{
-			Debug.Log("Battleshocked");
 			if (Random.value <= 0.001f) //rare chance to overcome fear behaviour
 			{
-				Debug.Log("Overcame Battleshock");
 				sbEvade.enabled = false; //no longer evading fights
 				sbWander.enabled = false; //no longer aimlessly wandering
 				

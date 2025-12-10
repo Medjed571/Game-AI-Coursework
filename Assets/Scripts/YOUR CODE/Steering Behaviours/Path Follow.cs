@@ -21,7 +21,7 @@ public class PathFollow : SteeringBehaviour
 
 	public override Vector3 UpdateBehaviour(SteeringAgent steeringAgent)
 	{
-		if (target == null) //if there are no enemies left in the scene
+		if (target == null) //if there are no enemies left in the scene just return it
         {
 			return steeringVelocity;
 		}
@@ -29,14 +29,14 @@ public class PathFollow : SteeringBehaviour
 		Vector3 targetPosition = new Vector3(targetNodeList[pathListNumber].x, targetNodeList[pathListNumber].y, 0f);
 		if((targetPosition - transform.position).magnitude < 0.5f) //if the agent is close to the closest node
         {
-			pathListNumber++;
+			pathListNumber++; //begin moving towards the next
 			if(pathListNumber == targetNodeList.Count) //if the agent is at the target
             {
-				pathListNumber = 0;
+				pathListNumber = 0; //reset the list to emulate an evasive movement
 
-				if (target.Health <= 0)
+				if (target.Health <= 0) //if the target is dead
 				{
-					targetNodeList = GetNodeList(); //when close enough to the target. search for a new target.
+					targetNodeList = GetNodeList(); //select a new target
 				}
 			}
 		}
